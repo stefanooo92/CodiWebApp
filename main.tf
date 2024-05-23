@@ -16,12 +16,15 @@ provider "azurerm" {
   features {}
 }
 
+
+#Resource group creation
 module "rg" {
   source   = "./modules/rg"
   rg_name  = var.rg_name
   location = var.location
 }
 
+#Vnet creation
 module "vnet" {
   source        = "./modules/vnet"
   vnet_name     = var.vnet_name
@@ -30,6 +33,7 @@ module "vnet" {
   address_space = var.address_space
 }
 
+#Azure container apps subnet creation
 module "aca_subnet" {
   source             = "./modules/subnet"
   rg_name            = module.rg.rg_name
@@ -39,6 +43,7 @@ module "aca_subnet" {
   service_delegation = true
 }
 
+#App gateway creation
 module "appgtw_subnet" {
   source             = "./modules/subnet"
   rg_name            = module.rg.rg_name
@@ -48,6 +53,7 @@ module "appgtw_subnet" {
   service_delegation = false
 }
 
+#Azure container apps environment creation
 module "aca_env" {
   source                     = "./modules/aca_env"
   aca_env_name               = var.aca_env_name
@@ -61,6 +67,7 @@ module "aca_env" {
 
 }
 
+#Azure container apps creation
 module "aca" {
   source                = "./modules/aca"
   aca_name              = var.aca_name
@@ -78,6 +85,7 @@ module "aca" {
 
 }
 
+#Private dns zone creation
 module "privatedns" {
   source                        = "./modules/privatedns"
   private_dns_zone_name         = module.aca_env.aca_env_default_domain
@@ -88,6 +96,7 @@ module "privatedns" {
 
 }
 
+#Public dns zone creation
 module "publicdns" {
   source                      = "./modules/publicdns"
   domain_name                 = var.domain_name
@@ -95,6 +104,7 @@ module "publicdns" {
   appgateway_a_record_records = [module.appgtw.appgateway_ip]
 }
 
+#Keyvault and SSL certifiacate creation
 module "keyvault" {
   source      = "./modules/keyvault"
   domain_name = var.domain_name
@@ -102,6 +112,7 @@ module "keyvault" {
   rg_name     = module.rg.rg_name
 }
 
+#User assigned identity creation
 module "uai" {
   source   = "./modules/uai"
   rg_name  = module.rg.rg_name
@@ -110,6 +121,7 @@ module "uai" {
 
 }
 
+#WAF policy creation
 module "waf" {
   source          = "./modules/waf"
   rg_name         = module.rg.rg_name
@@ -119,6 +131,7 @@ module "waf" {
 
 }
 
+#Application gateway creation
 module "appgtw" {
   source                    = "./modules/appgtw"
   rg_name                   = module.rg.rg_name
@@ -136,6 +149,7 @@ module "appgtw" {
 
 }
 
+#Network security group creation
 module "nsg" {
   source                    = "./modules/nsg"
   nsg_name                  = var.nsg_name
