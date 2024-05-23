@@ -13,7 +13,7 @@ https://golf13.cloud
 ## How to Run
 - Clone this repository
 - Navigate to the project directory
-- Replace "domain_name" variable in variable.tf file with your domain address
+- Replace "domain_name" variable in terraforms.tfvars file with your domain address
 - Run Terraform scripts
 
 ```
